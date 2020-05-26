@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="utf-8"?>
+<root xmlns:android="http://schemas.android.com/apk/res/android">
+	<init>
+		<log text="OpenCV Init Begin"/>
+	</init>
+	
+	<prebuildCopies>
+		<log text="OpenCV Copy Begin"/>
+		<copyDir src="$S(PluginDir)/../../Library/Android" dst="$S(BuildDir)" />
+	</prebuildCopies>
+	<androidManifestUpdates>
+		<log text="OpenCV Add read Camera Permission"/>
+		<addPermission android:name="android.permission.CAMERA"/>
+	</androidManifestUpdates>
+	<soLoadLibrary>
+		<loadLibrary name="opencv_java3" failmsg="ARWrapper library not loaded and required!"/>
+	</soLoadLibrary>
+
+</root>
+
+

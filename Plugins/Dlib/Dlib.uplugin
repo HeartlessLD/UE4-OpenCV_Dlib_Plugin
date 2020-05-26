@@ -1,0 +1,24 @@
+{
+	"FileVersion": 3,
+	"Version": 1,
+	"VersionName": "1.0",
+	"FriendlyName": "Dlib",
+	"Description": "Dlib Plugin",
+	"Category": "Other",
+	"CreatedBy": "Tong",
+	"CreatedByURL": "",
+	"DocsURL": "",
+	"MarketplaceURL": "",
+	"SupportURL": "",
+	"CanContainContent": true,
+	"IsBetaVersion": false,
+	"IsExperimentalVersion": false,
+	"Installed": false,
+	"Modules": [
+		{
+			"Name": "Dlib",
+			"Type": "Runtime",
+			"LoadingPhase": "Default"
+		}
+	]
+}
