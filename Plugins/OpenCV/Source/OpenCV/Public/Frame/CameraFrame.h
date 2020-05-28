@@ -17,6 +17,8 @@
 
 #include <vector>
 
+#include "Templates/SharedPointer.h"
+
 #if PLATFORM_ANDROID
 #include <jni.h>
 #include <errno.h>
@@ -48,7 +50,7 @@ class OPENCV_API FCameraFrame {
 
 	private:
 
-        VideoCapture* stream;
+        VideoCapture stream;
 	bool m_isOpen;
 
 	cv::CascadeClassifier faceCascade;

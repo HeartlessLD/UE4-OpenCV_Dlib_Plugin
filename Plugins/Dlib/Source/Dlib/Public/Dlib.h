@@ -4,6 +4,13 @@
 
 #include "Modules/ModuleManager.h"
 
+//for dlib config.h
+// #if PLATFORM_ANDROID
+// #ifndef ANDROID
+// #define ANDROID
+// #endif
+// #endif
+
 class FDlibModule : public IModuleInterface
 {
 public:
@@ -13,6 +20,5 @@ public:
 	virtual void ShutdownModule() override;
 
 private:
-	/** Handle to the test dll we will load */
-	void*	ExampleLibraryHandle;
+	
 };

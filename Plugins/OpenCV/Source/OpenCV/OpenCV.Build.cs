@@ -53,6 +53,8 @@ public class OpenCV : ModuleRules
         {
         	//for jni call
     		PrivateDependencyModuleNames.Add("Launch");
+            //for android permission
+            PrivateDependencyModuleNames.Add("AndroidPermission");
         }
 
             DynamicallyLoadedModuleNames.AddRange(

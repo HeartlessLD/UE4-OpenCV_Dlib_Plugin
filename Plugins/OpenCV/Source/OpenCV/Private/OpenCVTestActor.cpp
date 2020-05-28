@@ -67,11 +67,16 @@ void AOpenCVTestActor::BeginPlay()
 	{
 		GEngine->AddOnScreenDebugMessage(-1, 5, FColor::Green, TEXT("Opencv open img Success!"));
 	}
+	//Write Img
+	FString ts = ContentPath + "TestRes/ttwin.jpeg";
+	imwrite( TCHAR_TO_UTF8(*ts), img);
 	
 	namedWindow("Example", WINDOW_AUTOSIZE);
 	imshow("Example", img);
 	
 	
+
+
 #elif PLATFORM_ANDROID
 
 	
@@ -101,9 +106,12 @@ void AOpenCVTestActor::BeginPlay()
 	{
 		GEngine->AddOnScreenDebugMessage(-1, 5, FColor::Green, TEXT("Opencv open img Success!"));
 	}
-	
-	// namedWindow("Example", WINDOW_AUTOSIZE);
-	// imshow("Example", img);
+	//Write Img
+	// UE_LOG(LogTemp, Warning, TEXT("Android Begin Write img"));
+	// FString Android_TempPath = "/storage/emulated/0/ttand.jpeg";
+	// imwrite( TCHAR_TO_UTF8(*Android_TempPath), img);
+	// UE_LOG(LogTemp, Warning, TEXT("Android end Write img path = %s"), *Android_TempPath);
+
 #endif
 	
 	

@@ -84,7 +84,7 @@ void AWebcamReader::DoProcessing()
  
 void AWebcamReader::UpdateTexture()
 {
-	UE_LOG(LogTemp, Warning, TEXT("Begin UpdateTexture"));
+	//UE_LOG(LogTemp, Warning, TEXT("Begin UpdateTexture"));
 	if (isStreamOpen && frame.data)
 	{
 		// Copy Mat data to Data array
@@ -106,7 +106,7 @@ void AWebcamReader::UpdateTexture()
  
 void AWebcamReader::UpdateTextureRegions(UTexture2D* Texture, int32 MipIndex, uint32 NumRegions, FUpdateTextureRegion2D* Regions, uint32 SrcPitch, uint32 SrcBpp, uint8* SrcData, bool bFreeData)
 {
-	UE_LOG(LogTemp, Warning, TEXT("Begin UpdateTextureRegions"));
+	
 	if (Texture->Resource)
 	{
 		struct FUpdateTextureRegionsData
@@ -159,7 +159,7 @@ void AWebcamReader::UpdateTextureRegions(UTexture2D* Texture, int32 MipIndex, ui
 			delete RegionData;
 		});
 	}
-	UE_LOG(LogTemp, Warning, TEXT("End UpdateTextureRegions"));
+	
 }
 
 void AWebcamReader::BeginCapture()
@@ -177,6 +177,10 @@ void AWebcamReader::BeginCapture()
 		UpdateFrame();
 		VideoSize = FVector2D(frame.cols, frame.rows);
 		UE_LOG(LogTemp, Warning, TEXT("VideoSize == %s"), *VideoSize.ToString());
+		if(VideoSize == FVector2D::ZeroVector)
+		{
+			UE_LOG(LogTemp, Error, TEXT("Camera is opened, but get video size is zero"));
+		}
 		size = cv::Size(ResizeDeminsions.X, ResizeDeminsions.Y);
 		VideoTexture = UTexture2D::CreateTransient(VideoSize.X, VideoSize.Y);
 		VideoTexture->UpdateResource();
@@ -203,12 +207,10 @@ void AWebcamReader::BeginCapture()
 
 void AWebcamReader::EndPlay(const EEndPlayReason::Type EndPlayReason)
 {
-	Super::EndPlay(EndPlayReason);
-#if PLATFORM_ANDROID
+	
 	if (CameraFrame) {
 		CameraFrame->releaseCamera();
 	}
-#endif
-	
 	isStreamOpen = false;
+	Super::EndPlay(EndPlayReason);
 }

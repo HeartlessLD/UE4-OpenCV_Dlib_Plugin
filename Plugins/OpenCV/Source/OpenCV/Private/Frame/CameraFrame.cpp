@@ -113,18 +113,19 @@ bool FCameraFrame::captureCamera(int cameraId, int width, int height)
 	return m_isOpen;
 #endif
 
-	stream = new cv::VideoCapture();
-	stream->open(cameraId);
-	stream->set(CV_CAP_PROP_FRAME_WIDTH, width);
-	stream->set(CV_CAP_PROP_FRAME_HEIGHT, height);
+	//stream = MakeShareable(new cv::VideoCapture());
+	stream = cv::VideoCapture();
+	stream.open(cameraId);
+	stream.set(CV_CAP_PROP_FRAME_WIDTH, width);
+	stream.set(CV_CAP_PROP_FRAME_HEIGHT, height);
 
-	m_isOpen = stream->isOpened();
+	m_isOpen = stream.isOpened();
 	return m_isOpen;
 }
 
 bool FCameraFrame::getActualVideoSize(int& width, int& height)
 {
-	if (m_isOpen && stream != nullptr) {
+	if (m_isOpen ) {
 		Mat frame;
 		getFrame(frame);
 
@@ -141,9 +142,11 @@ bool FCameraFrame::getActualVideoSize(int& width, int& height)
 
 void FCameraFrame::releaseCamera()
 {
-	if (m_isOpen && stream != nullptr && stream->isOpened()) {
-		stream->release();
-		delete stream;
+	if (m_isOpen && stream.isOpened()) {
+		UE_LOG(LogTemp, Warning, TEXT("Windows begin Release Camera"));
+		stream.release();
+		// stream.Reset();
+		UE_LOG(LogTemp, Warning, TEXT("Windows Release Camera"));
 	}
 
 	m_isOpen = false;
@@ -177,8 +180,9 @@ void FCameraFrame::getFrame(Mat& frame)
 
 	frame_mutex.unlock();
 #else
-	stream->read(frame);
-	flip(frame, frame, 1);
+	Mat temp;
+	stream.read(temp);
+	flip(temp, frame, 1);
 #endif
 
 }
@@ -231,7 +235,7 @@ Java_org_getid_facerecognition_AndroidCamera_FrameProcessing(
 
 	jbyte* pNV21FrameData = env->GetByteArrayElements(NV21FrameData, NULL);
 	
-	ALOGW("Java_org_getid_facerecognition_AndroidCamera_FrameProcessing");
+	//ALOGW("Java_org_getid_facerecognition_AndroidCamera_FrameProcessing");
 	cv::Mat yuv(height + height / 2, width, CV_8UC1, (uchar*)pNV21FrameData);
 	cv::Mat bgr(height, width, CV_8UC3);
 	cv::cvtColor(yuv, bgr, CV_YUV2BGR_NV21);
@@ -240,7 +244,7 @@ Java_org_getid_facerecognition_AndroidCamera_FrameProcessing(
 	FCameraFrame::androidFrame = bgr;
 	frame_mutex.unlock();
 	
-	ALOGW("androidFrame col = %d row = %d", height, width);
+	//ALOGW("androidFrame col = %d row = %d", height, width);
 	
 	env->ReleaseByteArrayElements(NV21FrameData, pNV21FrameData, JNI_ABORT);
 

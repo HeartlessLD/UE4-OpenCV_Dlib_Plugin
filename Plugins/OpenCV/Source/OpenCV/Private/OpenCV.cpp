@@ -4,6 +4,12 @@
 
 #include "Interfaces/IPluginManager.h"
 
+
+#if PLATFORM_ANDROID
+#include "AndroidPermissionFunctionLibrary.h"
+#endif
+
+
 #define LOCTEXT_NAMESPACE "FOpenCVModule"
 
 void FOpenCVModule::StartupModule()
@@ -11,6 +17,9 @@ void FOpenCVModule::StartupModule()
 	// This code will execute after your module is loaded into memory; the exact timing is specified in the .uplugin file per-module
 	const FString PluginDir = IPluginManager::Get().FindPlugin(TEXT("OpenCV"))->GetBaseDir();
 	FString LibraryPath;
+
+
+	
 #if PLATFORM_WINDOWS
 	LibraryPath = FPaths::Combine(*PluginDir, TEXT("Library/Win64/"));
 	UE_LOG(LogTemp, Warning, TEXT("opencv world LibraryPath == %s"), *(LibraryPath + TEXT("opencv_world340.dll")));
@@ -21,10 +30,28 @@ void FOpenCVModule::StartupModule()
 		UE_LOG(LogTemp, Error, TEXT("Load OpenCV dll failed!"));
 	}
 #elif PLATFORM_ANDROID
-
+	//Request Android Permission
+	TArray<FString> AndroidTotalPermissions = {
+		TEXT("android.permission.CAMERA"),
+       TEXT("android.permission.READ_EXTERNAL_STORAGE"),
+       TEXT("android.permission.WRITE_EXTERNAL_STORAGE"),
+       TEXT("android.permission.MOUNT_UNMOUNT_FILESYSTEMS"),
+       };
+	TArray<FString> AndroidNeedReqPermissions;
+	for(int i = 0; i < AndroidTotalPermissions.Num(); i++)
+	{
+		if(!UAndroidPermissionFunctionLibrary::CheckPermission(AndroidTotalPermissions[i]))
+		{
+			AndroidNeedReqPermissions.Add(AndroidTotalPermissions[i]);
+		}	
+	}
+	UAndroidPermissionFunctionLibrary::AcquirePermissions(AndroidNeedReqPermissions);
 #elif PLATFORM_IOS
 
 #endif
+
+	
+	
 }
 
 void FOpenCVModule::ShutdownModule()
