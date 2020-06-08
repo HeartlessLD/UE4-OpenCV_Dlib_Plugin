@@ -43,6 +43,24 @@ public class AndroidCamera implements Camera.PreviewCallback{
         Log.d(TAG, "Get Front Camera ID = " + cameraId);    
         try {
             c = Camera.open(cameraId); // attempt to get a Camera instance
+
+            //Get Support
+            Camera.Parameters params = c.getParameters();
+            // List<Camera.Size> pictureSizes = params.getSupportedPictureSizes();
+            // int length = pictureSizes.size();
+            // for (int i = 0; i < length; i++) {
+            //     Log.e("SupportedPictureSizes","SupportedPictureSizes : " + pictureSizes.get(i).width + "x" + pictureSizes.get(i).height);
+            // }
+
+            // List<Camera.Size> previewSizes = params.getSupportedPreviewSizes();
+            // length = previewSizes.size();
+            // for (int i = 0; i < length; i++) {
+            //     Log.e("SupportedPreviewSizes","SupportedPreviewSizes : " + previewSizes.get(i).width + "x" + previewSizes.get(i).height);
+            // }
+            for(int i =0; i< c.getParameters().getSupportedPreviewSizes().size(); i++){
+                Camera.Size size = c.getParameters().getSupportedPreviewSizes().get(i);
+                Log.d(TAG, "supported preview size: " + size.width + " " + size.height);
+            }
         }
         catch (Exception e){
             // Camera is not available (in use or does not exist)

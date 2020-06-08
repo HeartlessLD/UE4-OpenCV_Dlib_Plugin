@@ -116,6 +116,9 @@ bool FCameraFrame::captureCamera(int cameraId, int width, int height)
 	//stream = MakeShareable(new cv::VideoCapture());
 	stream = cv::VideoCapture();
 	stream.open(cameraId);
+	float testWidh = stream.get(CV_CAP_PROP_FRAME_WIDTH);
+	float testHeight = stream.get(CV_CAP_PROP_FRAME_HEIGHT);
+	UE_LOG(LogTemp, Warning, TEXT("PC Camera MAX width = %f  height = %f"), testWidh, testHeight);
 	stream.set(CV_CAP_PROP_FRAME_WIDTH, width);
 	stream.set(CV_CAP_PROP_FRAME_HEIGHT, height);
 
@@ -181,7 +184,10 @@ void FCameraFrame::getFrame(Mat& frame)
 	frame_mutex.unlock();
 #else
 	Mat temp;
+	//UE_LOG(LogTemp, Warning, TEXT("read frame begin"));
 	stream.read(temp);
+	//UE_LOG(LogTemp, Warning, TEXT("read frame end"));
+	//UE_LOG(LogTemp, Warning, TEXT("read frame end1"));
 	flip(temp, frame, 1);
 #endif
 

@@ -7,8 +7,15 @@ public class FaceRecognition : ModuleRules
 	public FaceRecognition(ReadOnlyTargetRules Target) : base(Target)
 	{
 		PCHUsage = PCHUsageMode.UseExplicitOrSharedPCHs;
-	
-		PublicDependencyModuleNames.AddRange(new string[] { "Core", "CoreUObject", "Engine", "InputCore" });
+		//for c4458 c4459
+		ShadowVariableWarningLevel = WarningLevel.Off;
+		//for c4668  err
+		bEnableUndefinedIdentifierWarnings = false;
+		bEnableExceptions = true;
+		
+		PublicIncludePathModuleNames.Add("OpenCV");
+		PublicDependencyModuleNames.AddRange(new string[] { "Core", "CoreUObject", "Engine", "InputCore", "OpenCV", "Dlib", "RHI", 
+			"RenderCore", });
 
 		PrivateDependencyModuleNames.AddRange(new string[] {  });
 

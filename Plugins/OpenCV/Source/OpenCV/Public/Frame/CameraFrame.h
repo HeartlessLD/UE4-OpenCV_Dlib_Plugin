@@ -28,7 +28,6 @@
 #define ALOGW(...) ((void)__android_log_print(ANDROID_LOG_WARN, "FCameraFrame", __VA_ARGS__))
 #endif
 
-using namespace cv;
 using namespace std;
 
 
@@ -46,11 +45,11 @@ class OPENCV_API FCameraFrame {
 
 	static cv::Mat androidFrame;
 
-	void getFrame(Mat& frame);
+	void getFrame(cv::Mat& frame);
 
 	private:
 
-        VideoCapture stream;
+        cv::VideoCapture stream;
 	bool m_isOpen;
 
 	cv::CascadeClassifier faceCascade;

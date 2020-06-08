@@ -72,7 +72,7 @@ namespace dlib
 
     private:
 
-        inline bool verify (
+        inline bool dlib_verify (
             unsigned long index
         ) const
         /*!
@@ -234,7 +234,7 @@ namespace dlib
 
         // check the 5-order context's prediction
         if (table3[i5] != buffer.size() && 
-            verify(buffer.get_element_index(table3[i5])) )
+            dlib_verify(buffer.get_element_index(table3[i5])) )
         {
             index = buffer.get_element_index(table3[i5]);
             if (index > 20)
@@ -248,7 +248,7 @@ namespace dlib
         }
         // check the 4-order context's prediction
         else if (table4[i4] != buffer.size() && 
-            verify(buffer.get_element_index(table4[i4])) )
+            dlib_verify(buffer.get_element_index(table4[i4])) )
         {
             index = buffer.get_element_index(table4[i4]);
             if (index > 20)
@@ -262,7 +262,7 @@ namespace dlib
         }
         // check the 3-order context's prediction
         else if (table3[i3] != buffer.size() &&
-            verify(buffer.get_element_index(table3[i3])))
+            dlib_verify(buffer.get_element_index(table3[i3])))
         {
             index = buffer.get_element_index(table3[i3]);
             

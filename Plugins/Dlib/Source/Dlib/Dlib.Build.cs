@@ -11,7 +11,7 @@ public class Dlib : ModuleRules
 		
 		//solve cannot use ‘throw’ with exceptions disabled
 		bEnableExceptions = true;
-
+		
 		ShadowVariableWarningLevel = WarningLevel.Off;
 		
 		PublicIncludePaths.AddRange(
@@ -55,6 +55,8 @@ public class Dlib : ModuleRules
 				// ... add any modules that your module loads dynamically here ...
 			}
 			);
+
+
 
 		string IncludePath = Path.Combine(ModuleDirectory, "../../Include");
 		string LibraryPath = Path.Combine(ModuleDirectory, "../../Library");

@@ -1,26 +1,34 @@
 ﻿#include "ProtocolFactory.h"
 
-#include "Windows/AllowWindowsPlatformTypes.h"
+#include "rd_framework_cpp/scheduler/base/IScheduler.h"
+#include "rd_framework_cpp/wire/SocketWire.h"
 
+#include "Misc/App.h"
 #include "Misc/FileHelper.h"
 #include "Misc/Paths.h"
-#include "Runtime/CoreUObject/Public/UObject/Class.h"
-#include "GeneralProjectSettings.h"
+
+#if PLATFORM_WINDOWS
+// ReSharper disable once CppUnusedIncludeDirective
+#include "Windows/AllowWindowsPlatformTypes.h"
+#include "Windows/PreWindowsApi.h"
+
 #include "HAL/PlatformFilemanager.h"
-#include "Misc/App.h"
 #include "Windows/WindowsPlatformMisc.h"
 
+#include "Windows/PostWindowsApi.h"
+// ReSharper disable once CppUnusedIncludeDirective
 #include "Windows/HideWindowsPlatformTypes.h"
+#endif
 
-#include "SocketWire.h"
+#include "Runtime/Launch/Resources/Version.h"
 
-TUniquePtr<rd::Protocol> ProtocolFactory::create(rd::IScheduler & scheduler, rd::Lifetime socketLifetime) {
-    
 
+TUniquePtr<rd::Protocol> ProtocolFactory::Create(rd::IScheduler * Scheduler, rd::Lifetime SocketLifetime)
+{
 #if ENGINE_MAJOR_VERSION == 4 && ENGINE_MINOR_VERSION <= 20
 		TCHAR CAppDataLocalPath[4096];
 		FPlatformMisc::GetEnvironmentVariable(TEXT("LOCALAPPDATA"), CAppDataLocalPath, ARRAY_COUNT(CAppDataLocalPath));
-		FString FAppDataLocalPath = CAppDataLocalPath;
+        const FString FAppDataLocalPath = CAppDataLocalPath;
 #else
         const FString FAppDataLocalPath = FPlatformMisc::GetEnvironmentVariable(TEXT("LOCALAPPDATA"));
 #endif
@@ -30,30 +38,16 @@ TUniquePtr<rd::Protocol> ProtocolFactory::create(rd::IScheduler & scheduler, rd:
                                                               TEXT("Unreal"), TEXT("Ports"));
         const FString PortFileFullPath = FPaths::Combine(PortFullDirectoryPath, *ProjectName);
         
-        rd::minimum_level_to_log = rd::LogLevel::Fatal;
-        auto wire = std::make_shared<rd::SocketWire::Server>(socketLifetime, &scheduler, 0,
+        rd::minimum_level_to_log = rd::LogLevel::Error;
+        auto wire = std::make_shared<rd::SocketWire::Server>(SocketLifetime, Scheduler, 0,
                                                              TCHAR_TO_UTF8(
                                                                  *FString::Printf(TEXT("UnrealEditorServer-%s"), *
                                                                      ProjectName)));
-        auto protocol = MakeUnique<rd::Protocol>(rd::Identities::SERVER, &scheduler, wire, socketLifetime);
+        auto protocol = MakeUnique<rd::Protocol>(rd::Identities::SERVER, Scheduler, wire, SocketLifetime);
 
         auto& PlatformFile = FPlatformFileManager::Get().GetPlatformFile();
         if (PlatformFile.CreateDirectoryTree(*PortFullDirectoryPath)) {
             FFileHelper::SaveStringToFile(FString::FromInt(wire->port), *PortFileFullPath);
         }
-        wire->connected.advise(socketLifetime, [](bool value) {
-            if (value) {
-                //connected to R#
-            }
-            else {
-                //R# disconnected
-            }
-        });
-
-        socketLifetime->add_action([&, PortFileFullPath] {
-            if (!PlatformFile.DeleteFile(*PortFileFullPath)) {
-                //log error
-            }
-        });
     return protocol;
 }

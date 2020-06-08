@@ -160,7 +160,7 @@ standard Kalman filter (in G. Welch' and G. Bishop's notation):
   x(k)=A*x(k-1)+B*u(k)+w(k)  p(w)~N(0,Q)
   z(k)=H*x(k)+v(k),   p(v)~N(0,R)
 */
-typedef struct CvKalman
+typedef struct Cv
 {
     int MP;                     /* number of measurement vector dimensions */
     int DP;                     /* number of state vector dimensions */
